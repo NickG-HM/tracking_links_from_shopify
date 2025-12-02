@@ -3,172 +3,307 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shopify Order Tracking Links</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Order Tracking Links</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', -apple-system, sans-serif;
       background: #f8f9fa;
       color: #1a1a1a;
-      line-height: 1.6;
+      min-height: 100vh;
+      padding: 40px 20px;
     }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 60px 20px;
-    }
-    h1 {
-      font-size: 36px;
-      font-weight: 700;
-      margin-bottom: 16px;
-    }
-    .subtitle {
-      font-size: 18px;
-      color: #6b7280;
-      margin-bottom: 40px;
-    }
-    .card {
+    .container { max-width: 600px; margin: 0 auto; }
+    h1 { font-size: 24px; font-weight: 600; margin-bottom: 24px; color: #111; }
+    .search-box {
       background: #fff;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
-      padding: 32px;
-      margin-bottom: 24px;
+      padding: 20px;
+      margin-bottom: 20px;
     }
-    h2 {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-    p { margin-bottom: 16px; }
-    code {
-      background: #f3f4f6;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-    pre {
-      background: #1f2937;
-      color: #f9fafb;
-      padding: 16px;
+    .input-row { display: flex; gap: 10px; }
+    input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-family: inherit;
+      border: 1px solid #e5e7eb;
       border-radius: 8px;
-      overflow-x: auto;
-      margin: 16px 0;
+      outline: none;
     }
-    pre code {
-      background: none;
-      padding: 0;
-      color: inherit;
-    }
-    .btn {
-      display: inline-block;
+    input:focus { border-color: #2563eb; }
+    input::placeholder { color: #9ca3af; }
+    button {
       padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
       background: #2563eb;
       color: #fff;
-      text-decoration: none;
+      border: none;
       border-radius: 8px;
-      font-weight: 500;
-      margin-right: 12px;
-      margin-bottom: 12px;
+      cursor: pointer;
     }
-    .btn:hover { background: #1d4ed8; }
-    .btn-secondary {
+    button:hover { background: #1d4ed8; }
+    button:disabled { background: #93c5fd; cursor: not-allowed; }
+    .results { display: none; }
+    .results.visible { display: block; }
+    .order-card {
       background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .order-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .order-name { font-weight: 600; font-size: 16px; }
+    .order-date { font-size: 13px; color: #6b7280; }
+    .links-section { padding: 16px 20px; }
+    .link-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+    }
+    .link-row:not(:last-child) { border-bottom: 1px solid #f3f4f6; }
+    .link-label {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      min-width: 80px;
+    }
+    .link-url {
+      flex: 1;
+      font-size: 13px;
+      color: #2563eb;
+      word-break: break-all;
+      text-decoration: none;
+    }
+    .link-url:hover { text-decoration: underline; }
+    .copy-btn {
+      padding: 6px 10px;
+      font-size: 12px;
+      background: #f3f4f6;
+      color: #374151;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .copy-btn:hover { background: #e5e7eb; }
+    .copy-btn svg { width: 14px; height: 14px; }
+    .copy-both-btn {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: #f9fafb;
       color: #374151;
       border: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
-    .btn-secondary:hover { background: #f9fafb; }
-    ul { margin: 16px 0; padding-left: 24px; }
-    li { margin-bottom: 8px; }
-    .highlight {
-      background: #ecfdf5;
-      border: 1px solid #a7f3d0;
-      padding: 16px;
+    .copy-both-btn:hover { background: #f3f4f6; }
+    .copy-both-btn svg { width: 16px; height: 16px; }
+    .no-tracking { padding: 16px 20px; color: #6b7280; font-size: 14px; }
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #dc2626;
+      padding: 12px 16px;
       border-radius: 8px;
-      margin: 16px 0;
-    }
-    .highlight strong { color: #059669; }
-    footer {
-      text-align: center;
-      margin-top: 60px;
-      color: #9ca3af;
       font-size: 14px;
     }
+    .loader { display: none; text-align: center; padding: 40px; }
+    .loader.visible { display: block; }
+    .spinner {
+      width: 24px; height: 24px;
+      border: 2px solid #e5e7eb;
+      border-top-color: #2563eb;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #111;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    footer { text-align: center; margin-top: 40px; font-size: 12px; color: #9ca3af; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>📦 Shopify Order Tracking Links</h1>
-    <p class="subtitle">Get carrier tracking links directly from Shopify — no Track123 API needed.</p>
-
-    <div class="card">
-      <h2>What is this?</h2>
-      <p>A simple Node.js server that fetches order tracking data from your Shopify store and returns direct carrier tracking links.</p>
-      
-      <div class="highlight">
-        <strong>✓ No Track123 API calls</strong> — saves your API quota<br>
-        <strong>✓ Direct carrier links</strong> — USPS, FedEx, UPS, DHL, etc.<br>
-        <strong>✓ Parcels App fallback</strong> — universal tracking for unknown carriers<br>
-        <strong>✓ Zendesk integration</strong> — sidebar app included
-      </div>
+    <h1>📦 Order Tracking Links</h1>
+    <div class="search-box">
+      <form id="search-form">
+        <div class="input-row">
+          <input type="email" id="email-input" placeholder="customer@email.com" required>
+          <button type="submit" id="search-btn">Search</button>
+        </div>
+      </form>
     </div>
-
-    <div class="card">
-      <h2>Quick Start</h2>
-      <pre><code>git clone https://github.com/NickG-HM/tracking_links_from_shopify.git
-cd tracking_links_from_shopify
-npm install</code></pre>
-      
-      <p>Create a <code>.env</code> file:</p>
-      <pre><code>SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-SHOPIFY_ADMIN_ACCESS_TOKEN=shpat_xxxxxxxxxxxx
-PORT=3000</code></pre>
-      
-      <p>Run:</p>
-      <pre><code>npm start</code></pre>
-      
-      <a href="https://github.com/NickG-HM/tracking_links_from_shopify" class="btn">View on GitHub</a>
-    </div>
-
-    <div class="card">
-      <h2>API Usage</h2>
-      <p><strong>POST /api/links</strong></p>
-      <pre><code>// Request
-{ "orderName": "#123456" }
-
-// Response
-{
-  "trackingNumber": "1Z999AA10123456784",
-  "courierQueryLink": "https://www.ups.com/track?...",
-  "parcelsLink": "https://parcelsapp.com/en/tracking/..."
-}</code></pre>
-    </div>
-
-    <div class="card">
-      <h2>Supported Carriers</h2>
-      <ul>
-        <li>USPS, UPS, FedEx</li>
-        <li>DHL (Express & eCommerce)</li>
-        <li>Canada Post, Royal Mail, Australia Post</li>
-        <li>YunExpress, 4PX, Yanwen, Cainiao</li>
-        <li>PostNL, Deutsche Post, Hermes/Evri, GLS, TNT</li>
-        <li>Amazon Logistics, SF Express</li>
-      </ul>
-      <p>Unknown carriers use <a href="https://parcelsapp.com/" target="_blank">Parcels App</a> for universal tracking.</p>
-    </div>
-
-    <div class="card">
-      <h2>Deploy</h2>
-      <p>Deploy to any Node.js host:</p>
-      <a href="https://render.com/docs/deploy-node-express-app" class="btn btn-secondary" target="_blank">Render</a>
-      <a href="https://railway.app/new" class="btn btn-secondary" target="_blank">Railway</a>
-      <a href="https://heroku.com" class="btn btn-secondary" target="_blank">Heroku</a>
-    </div>
-
-    <footer>
-      <p>Made for customer support teams 💜</p>
-    </footer>
+    <div class="loader" id="loader"><div class="spinner"></div></div>
+    <div class="results" id="results"></div>
+    <footer>Shopify-only • No Track123 API calls</footer>
   </div>
+  <div class="toast" id="toast">Copied!</div>
+
+  <script>
+    // Supabase Edge Function URL
+    const API_URL = 'https://lrjemtcgiiscpfzypftx.supabase.co/functions/v1/links';
+
+    const form = document.getElementById('search-form');
+    const emailInput = document.getElementById('email-input');
+    const searchBtn = document.getElementById('search-btn');
+    const loader = document.getElementById('loader');
+    const results = document.getElementById('results');
+    const toast = document.getElementById('toast');
+
+    const copyIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="9" y="9" width="13" height="13" rx="2"/>
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+    </svg>`;
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;opacity:0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); document.body.removeChild(ta); return true; }
+        catch { document.body.removeChild(ta); return false; }
+      }
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function escapeHtml(t) {
+      if (!t) return '';
+      const d = document.createElement('div');
+      d.textContent = t;
+      return d.innerHTML;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (!email) return;
+
+      searchBtn.disabled = true;
+      loader.classList.add('visible');
+      results.classList.remove('visible');
+
+      try {
+        // First get orders by email
+        const ordersResp = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const ordersData = await ordersResp.json();
+
+        if (!ordersResp.ok || !ordersData.orders?.length) {
+          results.innerHTML = `<div class="error">${escapeHtml(ordersData.error || 'No orders found')}</div>`;
+          results.classList.add('visible');
+          return;
+        }
+
+        // For each order, get tracking links
+        let html = '';
+        for (const order of ordersData.orders) {
+          // Get tracking links for this order
+          const linksResp = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderName: order.orderName })
+          });
+          const links = await linksResp.json();
+
+          const carrierUrl = links.courierQueryLink;
+          const parcelsUrl = links.parcelsLink;
+          const hasLinks = carrierUrl || parcelsUrl;
+
+          html += `<div class="order-card">
+            <div class="order-header">
+              <span class="order-name">${escapeHtml(order.orderName)}</span>
+              <span class="order-date">${order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) : ''}</span>
+            </div>`;
+
+          if (order.trackingNumber && hasLinks) {
+            html += `<div class="links-section">`;
+            if (carrierUrl) {
+              html += `<div class="link-row">
+                <span class="link-label">Carrier</span>
+                <a href="${escapeHtml(carrierUrl)}" target="_blank" class="link-url">${escapeHtml(carrierUrl)}</a>
+                <button class="copy-btn" data-copy="${escapeHtml(carrierUrl)}">${copyIcon}</button>
+              </div>`;
+            }
+            if (parcelsUrl) {
+              html += `<div class="link-row">
+                <span class="link-label">Universal</span>
+                <a href="${escapeHtml(parcelsUrl)}" target="_blank" class="link-url">${escapeHtml(parcelsUrl)}</a>
+                <button class="copy-btn" data-copy="${escapeHtml(parcelsUrl)}">${copyIcon}</button>
+              </div>`;
+            }
+            if (carrierUrl && parcelsUrl) {
+              const both = `${carrierUrl}\n${parcelsUrl}`;
+              html += `<button class="copy-both-btn" data-copy="${escapeHtml(both)}">${copyIcon} Copy both</button>`;
+            }
+            html += `</div>`;
+          } else {
+            html += `<div class="no-tracking">${order.trackingNumber ? 'No tracking links' : 'Not yet shipped'}</div>`;
+          }
+          html += `</div>`;
+        }
+
+        results.innerHTML = html;
+        results.classList.add('visible');
+
+        results.querySelectorAll('[data-copy]').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const ok = await copyText(btn.getAttribute('data-copy'));
+            showToast(ok ? 'Copied!' : 'Failed');
+          });
+        });
+
+      } catch (err) {
+        results.innerHTML = `<div class="error">Connection error</div>`;
+        results.classList.add('visible');
+      } finally {
+        searchBtn.disabled = false;
+        loader.classList.remove('visible');
+      }
+    });
+  </script>
 </body>
 </html>
-

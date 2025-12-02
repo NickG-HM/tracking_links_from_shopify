@@ -3,9 +3,8 @@
 
   const client = ZAFClient.init();
   
-  // ⚠️ UPDATE THIS URL after deploying your server!
-  // Example: 'https://your-app.onrender.com/api/links'
-  const apiBaseUrl = 'YOUR_DEPLOYED_SERVER_URL/api/links';
+  // Supabase Edge Function URL
+  const apiBaseUrl = 'https://lrjemtcgiiscpfzypftx.supabase.co/functions/v1/links';
   
   let customerOrders = [];
 
